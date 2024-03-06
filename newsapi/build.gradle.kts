@@ -9,8 +9,9 @@ java {
     targetCompatibility = JavaVersion.VERSION_17
 }
 
-dependencies{
+dependencies {
     implementation(libs.retrofit)
     implementation(libs.kotlinx.koroutines.android)
     implementation(libs.kotlinx.koroutines.core)
+    implementation(libs.kotlinx.serialization.json)
 }
