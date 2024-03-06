@@ -48,13 +48,12 @@ fun newApi(
 private fun retrofit(
     baseUrl: String,
     okHttpClient: OkHttpClient?,
-    json: Json
+    json: Json,
 ): Retrofit {
     val jsonConverterFactory = json.asConverterFactory(MediaType.get("application/json"))
-    val retrofit = Retrofit.Builder()
+    return Retrofit.Builder()
         .baseUrl(baseUrl)
         .addConverterFactory(jsonConverterFactory)
         .run { if (okHttpClient != null) client(okHttpClient) else this }
         .build()
-    return retrofit
 }
