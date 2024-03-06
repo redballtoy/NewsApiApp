@@ -12,8 +12,11 @@ activityCompose = "1.8.2"
 composeBom = "2024.02.01"
 retrofit = "2.9.0"
 kotlinx-koroutines="1.8.0"
+retrofit2KotlinxSerializationConverter = "1.0.0"
 
 [libraries]
+
+retrofit2-kotlinx-serialization-converter = { module = "com.jakewharton.retrofit:retrofit2-kotlinx-serialization-converter", version.ref = "retrofit2KotlinxSerializationConverter" }
 
 androidx-annotation = { module = "androidx.annotation:annotation", version.ref = "annotation" }
 kotlinx-serialization-json= {module="org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinx-serialization-json" }
@@ -40,6 +43,7 @@ androidx-ui-tooling-preview = { group = "androidx.compose.ui", name = "ui-toolin
 androidx-ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-manifest" }
 androidx-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit4" }
 androidx-material3 = { group = "androidx.compose.material3", name = "material3" }
+
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }

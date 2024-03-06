@@ -15,4 +15,5 @@ dependencies {
     implementation(libs.kotlinx.koroutines.core)
     implementation(libs.kotlinx.serialization.json)
     implementation(libs.androidx.annotation)
+    implementation(libs.retrofit2.kotlinx.serialization.converter)
 }
