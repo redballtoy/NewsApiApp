@@ -6,6 +6,7 @@ import com.gmail.redballtoy.newsapi.models.Languages
 import com.gmail.redballtoy.newsapi.models.Response
 import com.gmail.redballtoy.newsapi.models.SortBy
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
+import com.skydoves.retrofit.adapters.result.ResultCallAdapterFactory
 import kotlinx.serialization.json.Json
 import okhttp3.MediaType
 import okhttp3.OkHttpClient
@@ -34,7 +35,7 @@ interface NewsApi {
         @Query("sortBy") sortBy: SortBy? = null,
         @Query("pageSize") @IntRange(from = 0, to = 100) pageSize: Int = 100,
         @Query("page") @IntRange(from = 1) page: Int = 1,
-    ): Response<Article>
+    ): Result<Response<Article>>
 }
 
 fun newApi(
@@ -54,6 +55,7 @@ private fun retrofit(
     return Retrofit.Builder()
         .baseUrl(baseUrl)
         .addConverterFactory(jsonConverterFactory)
+        .addCallAdapterFactory(ResultCallAdapterFactory.create())
         .run { if (okHttpClient != null) client(okHttpClient) else this }
         .build()
 }

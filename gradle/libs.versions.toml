@@ -13,8 +13,11 @@ composeBom = "2024.02.01"
 retrofit = "2.9.0"
 kotlinx-koroutines="1.8.0"
 retrofit2KotlinxSerializationConverter = "1.0.0"
+retrofit2Adapters = "1.0.9"
 
 [libraries]
+
+retrofit2-adapters = { module ="com.github.skydoves:retrofit-adapters-result", version.ref = "retrofit2Adapters" }
 
 retrofit2-kotlinx-serialization-converter = { module = "com.jakewharton.retrofit:retrofit2-kotlinx-serialization-converter", version.ref = "retrofit2KotlinxSerializationConverter" }
 
