@@ -5,6 +5,7 @@ import com.gmail.redballtoy.newsapi.models.Article
 import com.gmail.redballtoy.newsapi.models.Languages
 import com.gmail.redballtoy.newsapi.models.Response
 import com.gmail.redballtoy.newsapi.models.SortBy
+import com.gmail.redballtoy.newsapi.utils.TimeApiKeyInterceptor
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import com.skydoves.retrofit.adapters.result.ResultCallAdapterFactory
 import kotlinx.serialization.json.Json
@@ -13,6 +14,7 @@ import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.create
 import retrofit2.http.GET
+import retrofit2.http.Header
 import retrofit2.http.Query
 import java.util.Date
 
@@ -28,6 +30,7 @@ interface NewsApi {
      */
     @GET("/everything")
     suspend fun everything(
+        @Header("X-Api-Key") api: String,
         @Query("q") query: String? = null,
         @Query("from") from: Date? = null,
         @Query("to") to: Date? = null,
@@ -40,22 +43,28 @@ interface NewsApi {
 
 fun newApi(
     baseUrl: String,
+    apiKey: String,
     okHttpClient: OkHttpClient? = null,
     json: Json = Json,
 ): NewsApi {
-    return retrofit(baseUrl, okHttpClient, json).create()
+    return retrofit(baseUrl, apiKey, okHttpClient, json).create()
 }
 
 private fun retrofit(
     baseUrl: String,
+    apiKey: String,
     okHttpClient: OkHttpClient?,
     json: Json,
 ): Retrofit {
     val jsonConverterFactory = json.asConverterFactory(MediaType.get("application/json"))
-    return Retrofit.Builder()
-        .baseUrl(baseUrl)
-        .addConverterFactory(jsonConverterFactory)
+
+    val modifiedOkHttpClient =
+        (okHttpClient?.newBuilder() ?: OkHttpClient.Builder()).addInterceptor(
+            TimeApiKeyInterceptor(apiKey)
+        ).build()
+
+    return Retrofit.Builder().baseUrl(baseUrl).addConverterFactory(jsonConverterFactory)
         .addCallAdapterFactory(ResultCallAdapterFactory.create())
-        .run { if (okHttpClient != null) client(okHttpClient) else this }
+        .client(modifiedOkHttpClient)
         .build()
 }
