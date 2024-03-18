@@ -9,6 +9,7 @@ import java.text.DateFormat
 import java.util.Date
 
 internal object DateTimeUTCSerializer : KSerializer<Date> {
+
     override val descriptor = PrimitiveSerialDescriptor("Date", PrimitiveKind.STRING)
 
     override fun serialize(encoder: Encoder, value: Date) = encoder.encodeString(value.toString())

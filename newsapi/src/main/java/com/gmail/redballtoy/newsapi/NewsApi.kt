@@ -5,7 +5,7 @@ import com.gmail.redballtoy.newsapi.models.Article
 import com.gmail.redballtoy.newsapi.models.Languages
 import com.gmail.redballtoy.newsapi.models.Response
 import com.gmail.redballtoy.newsapi.models.SortBy
-import com.gmail.redballtoy.newsapi.utils.NewsApiKeyInterceptor
+import com.gmail.redballtoy.newsapi.utils.TimeApiKeyInterceptor
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import com.skydoves.retrofit.adapters.result.ResultCallAdapterFactory
 import kotlinx.serialization.json.Json
@@ -60,7 +60,7 @@ private fun retrofit(
 
     val modifiedOkHttpClient =
         (okHttpClient?.newBuilder() ?: OkHttpClient.Builder()).addInterceptor(
-            NewsApiKeyInterceptor(apiKey)
+            TimeApiKeyInterceptor(apiKey)
         ).build()
 
     return Retrofit.Builder().baseUrl(baseUrl).addConverterFactory(jsonConverterFactory)
