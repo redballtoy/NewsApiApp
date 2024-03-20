@@ -59,4 +59,6 @@ dependencies {
 
     implementation(libs.kotlinx.koroutines.android)
 
+    implementation(project(":news-data"))
+
 }
