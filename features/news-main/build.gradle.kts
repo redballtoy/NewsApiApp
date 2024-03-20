@@ -58,7 +58,5 @@ dependencies {
     debugImplementation(libs.androidx.ui.test.manifest)
 
     implementation(libs.kotlinx.koroutines.android)
-    implementation(project(":database"))
-    implementation(project(":newsapi"))
 
 }
