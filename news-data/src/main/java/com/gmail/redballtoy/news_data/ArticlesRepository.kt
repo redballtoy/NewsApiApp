@@ -11,17 +11,23 @@ class ArticlesRepository(
     private val api: NewsApi
 ) {
 
-    fun getAll(): Flow<List<Article>> {
-        return database.articleDao
-            .getAll()
-            .map { articles ->
-                articles.map { it.toArticle() }
-
-            }
+    fun getAll():
+            RequestResult<Flow<List<Article>>> {
+        return RequestResult.InProgress(
+            database.articleDao
+                .getAll()
+                .map { articles -> articles.map { it.toArticle() } }
+        )
     }
 
     suspend fun search(query: String): Flow<Article> {
         api.everything(query)
         TODO("Not Implemented")
     }
+}
+
+sealed class RequestResult<E>(protected val data: E?) {
+    class InProgress<E>(data: E?) : RequestResult<E>(data)
+    class Success<E>(data: E?) : RequestResult<E>(data)
+    class Error<E>(data: E?) : RequestResult<E>(data)
 }
