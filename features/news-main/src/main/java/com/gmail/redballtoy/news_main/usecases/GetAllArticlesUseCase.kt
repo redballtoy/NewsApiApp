@@ -6,7 +6,7 @@ import kotlinx.coroutines.flow.Flow
 
 class GetAllArticlesUseCase(private val repository: ArticlesRepository) {
 
-    suspend fun invoke(): Flow<Article> {
+    operator fun invoke(): Flow<List<Article>> {
         return repository.getAll()
     }
 }
