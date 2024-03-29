@@ -21,20 +21,25 @@ class ArticlesRepository(
     fun getAll(): Flow<RequestResult<List<Article>>> {
 
         //local cache
-        val cachedAllArticles = getAllFromDatabase()
+        val cachedAllArticles: Flow<RequestResult<List<Article>>> = getAllFromDatabase()
             .map { result ->
-                result.map { articlesDbos ->
-                    articlesDbos?.map { it.toArticle() }
+                result.map { articleDbos ->
+                    articleDbos.map { it.toArticle() }
                 }
-            }.map { it.map { } }
+            }
+
 
         //remote data
-        val remoteArticles: Flow<RequestResult<*>> = getAllFromServer()
+        val remoteArticles = getAllFromServer()
+            .map { result ->
+                result.map { response ->
+                    response.articles.map { it.toArticle() }
+                }
+            }
 
         //merge result used with order
-        return cachedAllArticles.combine(remoteArticles) { dbos: RequestResult<Article>, dtos: RequestResult<Article> ->
-
-
+        return cachedAllArticles.combine(remoteArticles) { dbos: RequestResult<List<Article>>, dtos: RequestResult<List<Article>> ->
+            RequestResult.InProgress()
         }
     }
 
@@ -74,23 +79,24 @@ class ArticlesRepository(
     }
 }
 
-sealed class RequestResult<E>(internal val data: E? = null) {
+sealed class RequestResult<out E>(internal val data: E? = null) {
     class InProgress<E>(data: E? = null) : RequestResult<E>(data)
-    class Success<E>(data: E) : RequestResult<E>(data)
-    class Error<E> : RequestResult<E>()
+    class Success<E : Any>(data: E) : RequestResult<E>(data)
+    class Error<E>(data: E? = null) : RequestResult<E>()
 }
-
 
 internal fun <T : Any> RequestResult<T?>.requireData(): T = checkNotNull(data)
 
-
 //custom mapping
-internal fun <In, Out> RequestResult<In>.map(mapper: (In?) -> Out): RequestResult<Out> {
-    val outData = mapper(data)
+internal fun <In, Out> RequestResult<In>.map(mapper: (In) -> Out): RequestResult<Out> {
     return when (this) {
-        is RequestResult.Success -> RequestResult.Success(outData)
-        is RequestResult.Error -> RequestResult.Error()
-        is RequestResult.InProgress -> RequestResult.InProgress(outData)
+        is RequestResult.Success -> {
+            val outData: Out = mapper(checkNotNull(data))
+            RequestResult.Success(checkNotNull(outData))
+        }
+
+        is RequestResult.Error -> RequestResult.Error(data?.let(mapper))
+        is RequestResult.InProgress -> RequestResult.InProgress(data?.let(mapper))
     }
 }
 
