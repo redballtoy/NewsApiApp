@@ -8,6 +8,10 @@ internal fun ArticleDBO.toArticle():Article{
     TODO("Not Implement")
 }
 
+internal fun ArticleDTO.toArticle():Article{
+    TODO("Not Implement")
+}
+
 internal fun ArticleDTO.toArticleDbo(): ArticleDBO {
     TODO("Not yet implemented")
 }
