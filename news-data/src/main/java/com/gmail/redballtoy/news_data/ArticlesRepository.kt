@@ -16,8 +16,11 @@ import kotlinx.coroutines.flow.onEach
 
 
 class ArticlesRepository(
-    private val database: NewsDatabase, private val api: NewsApi
+    private val database: NewsDatabase,
+    private val api: NewsApi,
+    private val requestResponseMergeStrategy: RequestResponseMergeStrategy<List<Article>>
 ) {
+
     fun getAll(): Flow<RequestResult<List<Article>>> {
 
         //local cache
@@ -28,7 +31,6 @@ class ArticlesRepository(
                 }
             }
 
-
         //remote data
         val remoteArticles = getAllFromServer()
             .map { result ->
@@ -38,9 +40,29 @@ class ArticlesRepository(
             }
 
         //merge result used with order
-        return cachedAllArticles.combine(remoteArticles) { dbos: RequestResult<List<Article>>, dtos: RequestResult<List<Article>> ->
-            RequestResult.InProgress()
+        return cachedAllArticles.combine(remoteArticles) { dbos,dtos ->
+            requestResponseMergeStrategy.merge(dbos,dtos)
         }
+    }
+
+
+
+    private fun getAllFromDatabase(): Flow<RequestResult<List<ArticleDBO>>> {
+        val databaseRequest = database.articleDao
+            .getAll()
+            .map { RequestResult.Success(it) }
+
+        //emit inProgress
+        val start = flowOf<RequestResult<List<ArticleDBO>>>(RequestResult.InProgress())
+
+        //union flows
+        return merge(start, databaseRequest)
+    }
+
+
+    suspend fun search(query: String): Flow<Article> {
+        api.everything(query)
+        TODO("Not Implemented")
     }
 
     private fun getAllFromServer(): Flow<RequestResult<ResponseDTO<ArticleDTO>>> {
@@ -62,6 +84,7 @@ class ArticlesRepository(
         return merge(apiRequest, start)
     }
 
+
     private suspend fun saveNetResponseToCache(data: List<ArticleDTO>) {
         val dbos = data.map { articleDTO ->
             articleDTO.toArticleDbo()
@@ -69,42 +92,6 @@ class ArticlesRepository(
         database.articleDao.insert(dbos)
     }
 
-    private fun getAllFromDatabase(): Flow<RequestResult.Success<List<ArticleDBO>>> {
-        return database.articleDao.getAll().map { RequestResult.Success(it) }
-    }
-
-    suspend fun search(query: String): Flow<Article> {
-        api.everything(query)
-        TODO("Not Implemented")
-    }
 }
 
-sealed class RequestResult<out E>(internal val data: E? = null) {
-    class InProgress<E>(data: E? = null) : RequestResult<E>(data)
-    class Success<E : Any>(data: E) : RequestResult<E>(data)
-    class Error<E>(data: E? = null) : RequestResult<E>()
-}
 
-internal fun <T : Any> RequestResult<T?>.requireData(): T = checkNotNull(data)
-
-//custom mapping
-internal fun <In, Out> RequestResult<In>.map(mapper: (In) -> Out): RequestResult<Out> {
-    return when (this) {
-        is RequestResult.Success -> {
-            val outData: Out = mapper(checkNotNull(data))
-            RequestResult.Success(checkNotNull(outData))
-        }
-
-        is RequestResult.Error -> RequestResult.Error(data?.let(mapper))
-        is RequestResult.InProgress -> RequestResult.InProgress(data?.let(mapper))
-    }
-}
-
-//convert Result(kotlin) to ResultRequest
-internal fun <T> Result<T>.toRequestResult(): RequestResult<T> {
-    return when {
-        isSuccess -> RequestResult.Success(getOrThrow())
-        isFailure -> RequestResult.Error()
-        else -> error("Impossible branch")
-    }
-}
