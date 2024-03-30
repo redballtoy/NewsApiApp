@@ -18,7 +18,7 @@ import kotlinx.coroutines.flow.onEach
 class ArticlesRepository(
     private val database: NewsDatabase,
     private val api: NewsApi,
-    private val mergeStrategy: MergeStrategy<List<Article>>
+    private val mergeStrategy: MergeStrategy<RequestResult<List<Article>>>
 ) {
 
     fun getAll(): Flow<RequestResult<List<Article>>> {
@@ -32,7 +32,7 @@ class ArticlesRepository(
             }
 
         //remote data
-        val remoteArticles = getAllFromServer()
+        val remoteArticles: Flow<RequestResult<List<Article>>> = getAllFromServer()
             .map { result ->
                 result.map { response ->
                     response.articles.map { it.toArticle() }
@@ -40,9 +40,7 @@ class ArticlesRepository(
             }
 
         //merge result used with order
-        return cachedAllArticles.combine(remoteArticles) { dbos,dtos ->
-            mergeStrategy.merge(dbos,dtos)
-        }
+        return cachedAllArticles.combine(remoteArticles, mergeStrategy::merge)
     }
 
 
