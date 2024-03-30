@@ -5,7 +5,7 @@ interface MergeStrategy<E> {
     fun merge(left: E, right: E): E
 }
 
-internal class DefaultResponseMergeStrategy<T: Any> : MergeStrategy<RequestResult<T>> {
+internal class DefaultMergeStrategy<T: Any> : MergeStrategy<RequestResult<T>> {
 
     override fun merge(left: RequestResult<T>, right: RequestResult<T>): RequestResult<T> {
         return when {
