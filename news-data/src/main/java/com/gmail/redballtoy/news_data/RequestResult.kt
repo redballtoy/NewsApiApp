@@ -1,6 +1,6 @@
 package com.gmail.redballtoy.news_data
 
-sealed class RequestResult<out E : Any>(internal val data: E? = null) {
+sealed class RequestResult<out E : Any>(val data: E? = null) {
 
     class InProgress<E : Any>(data: E? = null) : RequestResult<E>(data)
 
@@ -10,7 +10,7 @@ sealed class RequestResult<out E : Any>(internal val data: E? = null) {
 }
 
 //custom mapping
-internal fun <In : Any, Out : Any> RequestResult<In>.map(mapper: (In) -> Out): RequestResult<Out> {
+fun <In : Any, Out : Any> RequestResult<In>.map(mapper: (In) -> Out): RequestResult<Out> {
     return when (this) {
         is RequestResult.Success -> {
             val outData: Out = mapper(checkNotNull(data))

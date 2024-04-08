@@ -7,7 +7,9 @@ import com.gmail.redballtoy.newsapi.NewsApi
 import com.gmail.redballtoy.newsapi.models.ArticleDTO
 import com.gmail.redballtoy.newsapi.models.ResponseDTO
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.asFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
@@ -42,12 +44,20 @@ class ArticlesRepository(
 
         //merge result used with order
         return cachedAllArticles.combine(remoteArticles, mergeStrategy::merge)
+            .flatMapLatest { result ->
+                if (result is RequestResult.Success) {
+                    database.articleDao.observeAll()
+                        .map { dbos -> dbos.map { it.toArticle() } }
+                        .map { RequestResult.Success(it) }
+                } else {
+                    flowOf(result)
+                }
+            }
     }
 
 
     private fun getAllFromDatabase(): Flow<RequestResult<List<ArticleDBO>>> {
-        val databaseRequest = database.articleDao
-            .getAll()
+        val databaseRequest = database.articleDao::getAll.asFlow()
             .map { RequestResult.Success(it) }
 
         //emit inProgress
