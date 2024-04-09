@@ -18,8 +18,7 @@ import kotlinx.coroutines.flow.onEach
 
 
 class ArticlesRepository(
-    private val database: NewsDatabase,
-    private val api: NewsApi
+    private val database: NewsDatabase, private val api: NewsApi
 ) {
 
     fun getAll(
@@ -28,26 +27,16 @@ class ArticlesRepository(
 
         //local cache
         val cachedAllArticles: Flow<RequestResult<List<Article>>> = getAllFromDatabase()
-            .map { result ->
-                result.map { articleDbos ->
-                    articleDbos.map { it.toArticle() }
-                }
-            }
+
 
         //remote data
         val remoteArticles: Flow<RequestResult<List<Article>>> = getAllFromServer()
-            .map { result ->
-                result.map { response ->
-                    response.articles.map { it.toArticle() }
-                }
-            }
 
         //merge result used with order
         return cachedAllArticles.combine(remoteArticles, mergeStrategy::merge)
             .flatMapLatest { result ->
                 if (result is RequestResult.Success) {
-                    database.articleDao.observeAll()
-                        .map { dbos -> dbos.map { it.toArticle() } }
+                    database.articleDao.observeAll().map { dbos -> dbos.map { it.toArticle() } }
                         .map { RequestResult.Success(it) }
                 } else {
                     flowOf(result)
@@ -56,15 +45,18 @@ class ArticlesRepository(
     }
 
 
-    private fun getAllFromDatabase(): Flow<RequestResult<List<ArticleDBO>>> {
-        val databaseRequest = database.articleDao::getAll.asFlow()
-            .map { RequestResult.Success(it) }
+    private fun getAllFromDatabase(): Flow<RequestResult<List<Article>>> {
+        val databaseRequest = database.articleDao::getAll.asFlow().map { RequestResult.Success(it) }
 
         //emit inProgress
         val start = flowOf<RequestResult<List<ArticleDBO>>>(RequestResult.InProgress())
 
         //union flows
-        return merge(start, databaseRequest)
+        return merge(start, databaseRequest).map { result ->
+            result.map { articleDbos ->
+                articleDbos.map { it.toArticle() }
+            }
+        }
     }
 
 
@@ -73,7 +65,7 @@ class ArticlesRepository(
         TODO("Not Implemented")
     }
 
-    private fun getAllFromServer(): Flow<RequestResult<ResponseDTO<ArticleDTO>>> {
+    private fun getAllFromServer(): Flow<RequestResult<List<Article>>> {
 
         val apiRequest = flow {
             emit(api.everything())
@@ -90,6 +82,11 @@ class ArticlesRepository(
 
         //union flows
         return merge(apiRequest, start)
+            .map { result ->
+                result.map { response ->
+                    response.articles.map { it.toArticle() }
+                }
+            }
     }
 
 
@@ -100,6 +97,9 @@ class ArticlesRepository(
         database.articleDao.insert(dbos)
     }
 
+    fun fetchLatest(): Flow<RequestResult<List<Article>>> {
+        return getAllFromServer()
+    }
 }
 
 
