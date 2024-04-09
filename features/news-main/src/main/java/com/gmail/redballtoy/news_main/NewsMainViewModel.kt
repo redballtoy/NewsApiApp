@@ -18,6 +18,10 @@ internal class NewsMainViewModel(
     val state: StateFlow<State> = getAllArticlesUseCase()
         .map { it.toState() }
         .stateIn(viewModelScope, SharingStarted.Lazily, State.None)
+
+
+
+
 }
 
 

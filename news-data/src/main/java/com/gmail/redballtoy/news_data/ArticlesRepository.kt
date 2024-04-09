@@ -79,7 +79,7 @@ class ArticlesRepository(
             emit(api.everything())
         }.onEach { result ->
             if (result.isSuccess) {
-                saveNetResponseToCache(checkNotNull(result.getOrThrow().articles))
+                saveNetResponseToCache(result.getOrThrow().articles)
             }
         }.map {
             it.toRequestResult()
