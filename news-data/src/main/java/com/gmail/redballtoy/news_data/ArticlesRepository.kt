@@ -24,14 +24,10 @@ class ArticlesRepository(
     fun getAll(
         mergeStrategy: MergeStrategy<RequestResult<List<Article>>> = DefaultMergeStrategy()
     ): Flow<RequestResult<List<Article>>> {
-
         //local cache
         val cachedAllArticles: Flow<RequestResult<List<Article>>> = getAllFromDatabase()
-
-
         //remote data
         val remoteArticles: Flow<RequestResult<List<Article>>> = getAllFromServer()
-
         //merge result used with order
         return cachedAllArticles.combine(remoteArticles, mergeStrategy::merge)
             .flatMapLatest { result ->
@@ -47,10 +43,8 @@ class ArticlesRepository(
 
     private fun getAllFromDatabase(): Flow<RequestResult<List<Article>>> {
         val databaseRequest = database.articleDao::getAll.asFlow().map { RequestResult.Success(it) }
-
         //emit inProgress
         val start = flowOf<RequestResult<List<ArticleDBO>>>(RequestResult.InProgress())
-
         //union flows
         return merge(start, databaseRequest).map { result ->
             result.map { articleDbos ->
@@ -65,21 +59,17 @@ class ArticlesRepository(
         TODO("Not Implemented")
     }
 
-    private fun getAllFromServer(): Flow<RequestResult<List<Article>>> {
 
+    private fun getAllFromServer(): Flow<RequestResult<List<Article>>> {
         val apiRequest = flow {
             emit(api.everything())
         }.onEach { result ->
             if (result.isSuccess) {
                 saveNetResponseToCache(result.getOrThrow().articles)
             }
-        }.map {
-            it.toRequestResult()
-        }
-
+        }.map { it.toRequestResult() }
         //emit inProgress
         val start = flowOf<RequestResult<ResponseDTO<ArticleDTO>>>(RequestResult.InProgress())
-
         //union flows
         return merge(apiRequest, start)
             .map { result ->
@@ -91,11 +81,10 @@ class ArticlesRepository(
 
 
     private suspend fun saveNetResponseToCache(data: List<ArticleDTO>) {
-        val dbos = data.map { articleDTO ->
-            articleDTO.toArticleDbo()
-        }
+        val dbos = data.map { articleDTO -> articleDTO.toArticleDbo() }
         database.articleDao.insert(dbos)
     }
+
 
     fun fetchLatest(): Flow<RequestResult<List<Article>>> {
         return getAllFromServer()

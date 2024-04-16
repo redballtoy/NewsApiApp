@@ -22,11 +22,8 @@ internal class NewsMainViewModel(
         .stateIn(viewModelScope, SharingStarted.Lazily, State.None)
 
     fun forceUpdate() {
-        repository.fetchLatest()
 
     }
-
-
 }
 
 
