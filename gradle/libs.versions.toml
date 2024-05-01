@@ -18,7 +18,8 @@ appcompat = "1.6.1"
 material = "1.11.0"
 room = "2.6.1"
 ksp = "1.9.22-1.0.18"
-dagger="2.44"
+dagger="2.50"
+jakarta-inject="2.0.1"
 
 [libraries]
 
@@ -65,6 +66,10 @@ dagger-hilt-android = { module = "com.google.dagger:hilt-android", version.ref =
 dagger-hilt-compiler = { module = "com.google.dagger:hilt-compiler", version.ref = "dagger" }
 dagger-compiler = { module = "com.google.dagger:dagger-compiler", version.ref = "dagger" }
 dagger-main = { module = "com.google.dagger:dagger", version.ref = "dagger" }
+
+jakarta-inject = { module = "jakarta.inject:jakarta.inject-api", version.ref = "jakarta-inject" }
+
+
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }

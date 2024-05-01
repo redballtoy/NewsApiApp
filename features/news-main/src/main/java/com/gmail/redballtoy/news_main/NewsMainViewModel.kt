@@ -2,18 +2,19 @@ package com.gmail.redballtoy.news_main
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.gmail.redballtoy.news_data.ArticlesRepository
 import com.gmail.redballtoy.news_data.RequestResult
 import com.gmail.redballtoy.news_data.model.Article
 import com.gmail.redballtoy.news_main.usecases.GetAllArticlesUseCase
+import dagger.hilt.android.lifecycle.HiltViewModel
+import jakarta.inject.Inject
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 
-internal class NewsMainViewModel(
-    private val getAllArticlesUseCase: GetAllArticlesUseCase,
-    private val repository: ArticlesRepository
+@HiltViewModel
+internal class NewsMainViewModel @Inject constructor(
+    getAllArticlesUseCase: GetAllArticlesUseCase,
 ) : ViewModel() {
 
     //get new readonly state flow
