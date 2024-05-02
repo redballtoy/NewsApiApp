@@ -20,6 +20,8 @@ android {
         vectorDrawables {
             useSupportLibrary = true
         }
+        buildConfigField("String","NEWS_API_KEY","\"\"")
+        buildConfigField("String","NEWS_API_BASE_URL","\"\"")
     }
 
     buildTypes {
@@ -39,6 +41,7 @@ android {
         jvmTarget = "1.8"
     }
     buildFeatures {
+        buildConfig=true
         compose = true
     }
     composeOptions {
@@ -71,4 +74,8 @@ dependencies {
 
     implementation(libs.dagger.hilt.android)
     kapt(libs.dagger.hilt.compiler)
+
+    implementation(project(":news-data"))
+    implementation(project(":newsapi"))
+    implementation(project(":database"))
 }

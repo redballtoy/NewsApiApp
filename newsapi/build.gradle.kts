@@ -11,10 +11,12 @@ java {
 
 dependencies {
     implementation(libs.retrofit)
-    implementation(libs.kotlinx.koroutines.android)
     implementation(libs.kotlinx.koroutines.core)
-    implementation(libs.kotlinx.serialization.json)
+    api(libs.kotlinx.serialization.json)
     implementation(libs.androidx.annotation)
     implementation(libs.retrofit2.kotlinx.serialization.converter)
     implementation(libs.retrofit2.adapters)
+
+    api(libs.okhttp3)
+
 }

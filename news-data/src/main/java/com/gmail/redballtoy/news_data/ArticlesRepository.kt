@@ -6,6 +6,7 @@ import com.gmail.redballtoy.news_data.model.Article
 import com.gmail.redballtoy.newsapi.NewsApi
 import com.gmail.redballtoy.newsapi.models.ArticleDTO
 import com.gmail.redballtoy.newsapi.models.ResponseDTO
+import jakarta.inject.Inject
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.asFlow
 import kotlinx.coroutines.flow.combine
@@ -17,8 +18,9 @@ import kotlinx.coroutines.flow.merge
 import kotlinx.coroutines.flow.onEach
 
 
-class ArticlesRepository(
-    private val database: NewsDatabase, private val api: NewsApi
+class ArticlesRepository @Inject constructor(
+    private val database: NewsDatabase,
+    private val api: NewsApi
 ) {
 
     fun getAll(

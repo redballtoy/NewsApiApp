@@ -42,4 +42,8 @@ dependencies {
     implementation(project(":newsapi"))
     implementation(libs.dagger.hilt.android)
     kapt(libs.dagger.hilt.compiler)
+
+    implementation(libs.jakarta.inject)
+
+
 }

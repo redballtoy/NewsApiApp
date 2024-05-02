@@ -6,21 +6,23 @@ import com.gmail.redballtoy.news_data.RequestResult
 import com.gmail.redballtoy.news_data.model.Article
 import com.gmail.redballtoy.news_main.usecases.GetAllArticlesUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
-import jakarta.inject.Inject
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
+import javax.inject.Inject
+import javax.inject.Provider
 
 @HiltViewModel
 internal class NewsMainViewModel @Inject constructor(
-    getAllArticlesUseCase: GetAllArticlesUseCase,
+    getAllArticlesUseCase: Provider<GetAllArticlesUseCase>,
 ) : ViewModel() {
 
     //get new readonly state flow
-    val state: StateFlow<State> = getAllArticlesUseCase()
+    val state: StateFlow<State> = getAllArticlesUseCase.get().invoke()
         .map { it.toState() }
         .stateIn(viewModelScope, SharingStarted.Lazily, State.None)
+
 
     fun forceUpdate() {
 
