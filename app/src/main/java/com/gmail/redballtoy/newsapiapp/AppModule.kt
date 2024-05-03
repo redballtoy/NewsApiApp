@@ -2,6 +2,7 @@ package com.gmail.redballtoy.newsapiapp
 
 import android.content.Context
 import com.gmail.redballtoy.database.NewsDatabase
+import com.gmail.redballtoy.news_common.AppDispatchers
 import com.gmail.redballtoy.newsapi.NewsApi
 import com.gmail.redballtoy.newsapi.newApi
 import dagger.Module
@@ -30,4 +31,8 @@ object AppModule {
     fun providedDatabase(@ApplicationContext context: Context): NewsDatabase {
         return NewsDatabase(context)
     }
+
+    @Provides
+    @Singleton
+    fun provideAppCoroutineDispatcher(): AppDispatchers = AppDispatchers()
 }
