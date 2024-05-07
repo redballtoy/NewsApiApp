@@ -8,8 +8,8 @@ import java.util.Date
 
 @Entity(tableName = "articles")
 data class ArticleDBO(
-    @PrimaryKey(autoGenerate = true) val  id: Long,
-    @ColumnInfo  ("source") @Embedded val source: Source,
+    @PrimaryKey(autoGenerate = true) val id: Long=0,
+    @Embedded(prefix = "source-") val source: Source,
     @ColumnInfo("author") val author: String,
     @ColumnInfo("title") val title: String,
     @ColumnInfo("description") val description: String,

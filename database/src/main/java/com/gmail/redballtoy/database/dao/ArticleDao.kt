@@ -14,7 +14,7 @@ interface ArticleDao {
     suspend fun getAll(): List<ArticleDBO>
 
     @Query("SELECT * FROM articles")
-    suspend fun observeAll(): Flow<List<ArticleDBO>>
+    fun observeAll(): Flow<List<ArticleDBO>>
 
     @Insert
     suspend fun insert(articles: List<ArticleDBO>)
