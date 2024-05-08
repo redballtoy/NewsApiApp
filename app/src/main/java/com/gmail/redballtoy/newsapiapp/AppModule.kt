@@ -2,7 +2,9 @@ package com.gmail.redballtoy.newsapiapp
 
 import android.content.Context
 import com.gmail.redballtoy.database.NewsDatabase
+import com.gmail.redballtoy.news_common.AndroidLogcatLogger
 import com.gmail.redballtoy.news_common.AppDispatchers
+import com.gmail.redballtoy.news_common.Logger
 import com.gmail.redballtoy.newsapi.NewsApi
 import com.gmail.redballtoy.newsapi.newApi
 import dagger.Module
@@ -10,6 +12,8 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
+import okhttp3.OkHttpClient
+import okhttp3.logging.HttpLoggingInterceptor
 import javax.inject.Singleton
 
 
@@ -19,10 +23,25 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun providedNewsApi(): NewsApi {
+    fun provideHttpClient(): OkHttpClient? {
+        //Use logging only if BuildConfig.DEBUG
+        if (BuildConfig.DEBUG) {
+            val logging = HttpLoggingInterceptor()
+                .setLevel(HttpLoggingInterceptor.Level.BODY)
+            return OkHttpClient.Builder()
+                .addInterceptor(logging)
+                .build()
+        }
+        return null
+    }
+
+    @Provides
+    @Singleton
+    fun providedNewsApi(okHttpClient: OkHttpClient?): NewsApi {
         return newApi(
             baseUrl = BuildConfig.NEWS_API_BASE_URL,
-            apiKey = BuildConfig.NEWS_API_KEY
+            apiKey = BuildConfig.NEWS_API_KEY,
+            okHttpClient = okHttpClient
         )
     }
 
@@ -35,4 +54,8 @@ object AppModule {
     @Provides
     @Singleton
     fun provideAppCoroutineDispatcher(): AppDispatchers = AppDispatchers()
+
+
+    @Provides
+    fun provideLogger(): Logger = AndroidLogcatLogger()
 }

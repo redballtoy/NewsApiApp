@@ -23,6 +23,7 @@ jakarta-inject="2.0.1"
 okhttp3="4.12.0"
 composeRuntime = "1.6.7"
 
+
 [libraries]
 
 androidx-lifecycle-runtime-ktx = { group = "androidx.lifecycle", name = "lifecycle-runtime-ktx", version.ref = "lifecycle" }
@@ -32,6 +33,7 @@ androidx-lifecycle-viewmodel-compose = { module = "androidx.lifecycle:lifecycle-
 
 androidx-room-compiler = { module = "androidx.room:room-compiler", version.ref = "room" }
 androidx-room-ktx = { module = "androidx.room:room-ktx", version.ref = "room" }
+
 
 retrofit2-adapters = { module ="com.github.skydoves:retrofit-adapters-result", version.ref = "retrofit2Adapters" }
 retrofit2-kotlinx-serialization-converter = { module = "com.jakewharton.retrofit:retrofit2-kotlinx-serialization-converter", version.ref = "retrofit2KotlinxSerializationConverter" }
@@ -75,7 +77,7 @@ dagger-main = { module = "com.google.dagger:dagger", version.ref = "dagger" }
 jakarta-inject = { module = "jakarta.inject:jakarta.inject-api", version.ref = "jakarta-inject" }
 
 okhttp3 = { module = "com.squareup.okhttp3:okhttp", version.ref = "okhttp3" }
-
+okhttp3-logging-interceptor = { module = "com.squareup.okhttp3:logging-interceptor", version.ref = "okhttp3" }
 
 
 

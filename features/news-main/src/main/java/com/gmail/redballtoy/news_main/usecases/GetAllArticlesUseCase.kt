@@ -12,8 +12,8 @@ class GetAllArticlesUseCase @Inject constructor(
     private val repository: ArticlesRepository
 ) {
 
-    operator fun invoke(): Flow<RequestResult<List<Article>>> {
-        return repository.getAll()
+    operator fun invoke(query:String): Flow<RequestResult<List<Article>>> {
+        return repository.getAll(query)
             .map { requestResult ->
                 requestResult.map { articles ->
                     articles.map { it.toUiArticles() }
@@ -24,5 +24,15 @@ class GetAllArticlesUseCase @Inject constructor(
 }
 
 private fun Article.toUiArticles(): Article {
-    TODO("Not implemented")
+    return Article(
+        id = id,
+        title = title,
+        description = description,
+        urlToImage = urlToImage,
+        url = url,
+        author = author,
+        publishedAt = publishedAt,
+        source = source,
+        content = content
+    )
 }

@@ -28,7 +28,7 @@ interface NewsApi {
     /**
      * API details [here](https://newsapi.org/docs/endpoints/everything)
      */
-    @GET("/everything")
+    @GET("everything")
     suspend fun everything(
         @Header("X-Api-Key") api: String? = null,
         @Query("q") query: String? = null,
@@ -63,7 +63,9 @@ private fun retrofit(
             NewsApiKeyInterceptor(apiKey)
         ).build()
 
-    return Retrofit.Builder().baseUrl(baseUrl).addConverterFactory(jsonConverterFactory)
+    return Retrofit.Builder()
+        .baseUrl(baseUrl)
+        .addConverterFactory(jsonConverterFactory)
         .addCallAdapterFactory(ResultCallAdapterFactory.create())
         .client(modifiedOkHttpClient)
         .build()

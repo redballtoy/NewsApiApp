@@ -72,6 +72,8 @@ dependencies {
     implementation(libs.dagger.hilt.android)
     kapt(libs.dagger.hilt.compiler)
 
+    implementation(libs.okhttp3.logging.interceptor)
+
     implementation(project(":news-data"))
     implementation(project(":newsapi"))
     implementation(project(":database"))

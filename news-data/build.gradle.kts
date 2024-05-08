@@ -38,13 +38,14 @@ dependencies {
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.kotlinx.koroutines.android)
-    implementation(project(":database"))
-    implementation(project(":newsapi"))
     implementation(libs.dagger.hilt.android)
     kapt(libs.dagger.hilt.compiler)
     kapt(libs.androidx.room.compiler)
 
     implementation(libs.jakarta.inject)
 
+    implementation(project(":database"))
+    implementation(project(":newsapi"))
+    implementation(project(":news-common"))
 
 }

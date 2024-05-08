@@ -19,7 +19,7 @@ internal class NewsMainViewModel @Inject constructor(
 ) : ViewModel() {
 
     //get new readonly state flow
-    val state: StateFlow<State> = getAllArticlesUseCase.get().invoke()
+    val state: StateFlow<State> = getAllArticlesUseCase.get().invoke(query = "android")
         .map { it.toState() }
         .stateIn(viewModelScope, SharingStarted.Lazily, State.None)
 
@@ -34,7 +34,7 @@ private fun RequestResult<List<Article>>.toState(): State {
     return when (this) {
         is RequestResult.Error -> State.Error()
         is RequestResult.InProgress -> State.Loading(data)
-        is RequestResult.Success -> State.Success(checkNotNull(data))
+        is RequestResult.Success -> State.Success(data)
     }
 }
 
