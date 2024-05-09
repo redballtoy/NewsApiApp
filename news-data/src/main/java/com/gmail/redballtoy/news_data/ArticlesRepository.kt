@@ -55,10 +55,10 @@ class ArticlesRepository @Inject constructor(
     private fun getAllFromDatabase(): Flow<RequestResult<List<Article>>> {
         val databaseRequest = database.articleDao::getAll
             .asFlow()
-            .map { RequestResult.Success(it) }
+            .map<List<ArticleDBO>, RequestResult<List<ArticleDBO>>> { RequestResult.Success(it) }
             .catch {
-                RequestResult.Error<List<ArticleDBO>>(error = it)
                 logger.e(TAG, "Error getting data from database. Cause = $it")
+                emit(RequestResult.Error<List<ArticleDBO>>(error = it))
             }
 
         //emit inProgress
@@ -81,7 +81,7 @@ class ArticlesRepository @Inject constructor(
 
     private fun getAllFromServer(query: String): Flow<RequestResult<List<Article>>> {
         val apiRequest = flow {
-            emit(api.everything(query=query))
+            emit(api.everything(query = query))
         }.onEach { result ->
             if (result.isSuccess) {
                 saveNetResponseToCache(result.getOrThrow().articles)
@@ -119,6 +119,8 @@ class ArticlesRepository @Inject constructor(
     private companion object {
         const val TAG = "myLog"
     }
+
+
 }
 
 
