@@ -120,6 +120,7 @@ internal fun Article(
         modifier = Modifier
             .padding(8.dp)
     ) {
+        Text(text = article.publishedAt.toString()?:"No Date", style = MaterialTheme.typography.bodySmall, maxLines = 1)
         Text(text = article.title ?:"No Title", style = MaterialTheme.typography.headlineMedium, maxLines = 1)
         Spacer(modifier = Modifier.size(4.dp))
         Text(text = article.description ?:"No Description", style = MaterialTheme.typography.bodyMedium, maxLines = 3)
