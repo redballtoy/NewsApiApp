@@ -16,13 +16,11 @@ android {
         versionCode = 1
         versionName = "1.0"
 
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-        vectorDrawables {
-            useSupportLibrary = true
-        }
         buildConfigField("String","NEWS_API_KEY","\"1718f6366569461a86617f923b3f7002\"")
         buildConfigField("String","NEWS_API_BASE_URL","\"https://newsapi.org/v2/\"")
     }
+
+
 
     buildTypes {
         release {
@@ -40,13 +38,16 @@ android {
     kotlinOptions {
         jvmTarget = "1.8"
     }
+
+    composeOptions{
+        kotlinCompilerExtensionVersion = "1.5.13"
+    }
+
     buildFeatures {
         buildConfig=true
         compose = true
     }
-    composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.13"
-    }
+
     packaging {
         resources {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
@@ -68,15 +69,15 @@ dependencies {
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
 
-
     implementation(libs.dagger.hilt.android)
     kapt(libs.dagger.hilt.compiler)
 
-    implementation(libs.okhttp3.logging.interceptor)
+    debugImplementation(libs.okhttp3.logging.interceptor)
 
     implementation(project(":news-data"))
     implementation(project(":newsapi"))
     implementation(project(":database"))
     implementation(project(":features:news-main"))
     implementation(project(":news-common"))
+    implementation(project(":news-uikit"))
 }

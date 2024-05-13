@@ -84,7 +84,7 @@ class ArticlesRepository @Inject constructor(
             emit(api.everything(query = query))
         }.onEach { result ->
             if (result.isSuccess) {
-                saveNetResponseToCache(result.getOrThrow().articles)
+                saveArticlesToCache(result.getOrThrow().articles)
             }
         }.onEach { result ->
             if (result.isFailure) {
@@ -106,7 +106,7 @@ class ArticlesRepository @Inject constructor(
     }
 
 
-    private suspend fun saveNetResponseToCache(data: List<ArticleDTO>) {
+    private suspend fun saveArticlesToCache(data: List<ArticleDTO>) {
         val dbos = data.map { articleDTO -> articleDTO.toArticleDbo() }
         database.articleDao.insert(dbos)
     }

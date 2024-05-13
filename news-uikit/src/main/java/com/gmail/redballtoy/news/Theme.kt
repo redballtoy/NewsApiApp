@@ -1,4 +1,4 @@
-package com.gmail.redballtoy.newsapiapp.ui.theme
+package com.gmail.redballtoy.news
 
 import android.app.Activity
 import android.os.Build

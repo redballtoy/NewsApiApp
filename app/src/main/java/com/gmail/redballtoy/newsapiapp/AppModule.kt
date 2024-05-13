@@ -13,7 +13,6 @@ import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import okhttp3.OkHttpClient
-import okhttp3.logging.HttpLoggingInterceptor
 import javax.inject.Singleton
 
 
@@ -21,19 +20,7 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 object AppModule {
 
-    @Provides
-    @Singleton
-    fun provideHttpClient(): OkHttpClient? {
-        //Use logging only if BuildConfig.DEBUG
-        if (BuildConfig.DEBUG) {
-            val logging = HttpLoggingInterceptor()
-                .setLevel(HttpLoggingInterceptor.Level.BODY)
-            return OkHttpClient.Builder()
-                .addInterceptor(logging)
-                .build()
-        }
-        return null
-    }
+
 
     @Provides
     @Singleton
