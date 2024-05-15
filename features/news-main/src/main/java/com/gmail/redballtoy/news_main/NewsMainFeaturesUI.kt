@@ -9,7 +9,11 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -17,6 +21,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.key
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -110,37 +115,54 @@ internal fun Article(
     @PreviewParameter(ArticlePreviewProvider::class, limit = 1)
     article: Article
 ) {
-    Column(
+    Card(
         modifier = Modifier
-            .padding(8.dp)
+            .padding(4.dp),
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.surfaceContainerHigh,
+        ),
     ) {
-        Text(
-            text = article.publishedAt.toString() ?: stringResource(R.string.no_date),
-            style = NewsApiAppTheme.typography.bodySmall,
-            maxLines = 1,
-            modifier = Modifier.fillMaxWidth(),
-            textAlign = TextAlign.End
-        )
-        Text(
-            text = article.title ?: stringResource(R.string.no_title),
-            style = NewsApiAppTheme.typography.headlineMedium,
-            maxLines = 1,
-            modifier = Modifier.fillMaxWidth(),
-            textAlign = TextAlign.Center
-        )
-        article.urlToImage?.let {imageUrl->
-            AsyncImage(
-                model = imageUrl,
-                contentDescription = stringResource(R.string.content_article_image),
-                alignment = Alignment.Center
+        Column(
+            modifier = Modifier
+                .padding(8.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
+
+
+        ) {
+            Text(
+                text = article.publishedAt.toString() ?: stringResource(R.string.no_date),
+                style = NewsApiAppTheme.typography.bodySmall,
+                maxLines = 1,
+                modifier = Modifier.fillMaxWidth(),
+                textAlign = TextAlign.End
+            )
+            Text(
+                text = article.title ?: stringResource(R.string.no_title),
+                style = NewsApiAppTheme.typography.headlineMedium,
+                maxLines = 1,
+                modifier = Modifier.fillMaxWidth(),
+                textAlign = TextAlign.Center
+            )
+            Box(
+                modifier = Modifier
+                    .clip(RoundedCornerShape(8.dp))
+
+            ) {
+                article.urlToImage?.let { imageUrl ->
+                    AsyncImage(
+                        model = imageUrl,
+                        contentDescription = stringResource(R.string.content_article_image),
+                        alignment = Alignment.Center
+                    )
+                }
+            }
+            Spacer(modifier = Modifier.size(4.dp))
+            Text(
+                text = article.description ?: stringResource(R.string.no_description),
+                style = NewsApiAppTheme.typography.bodyMedium,
+                maxLines = 3
             )
         }
-        Spacer(modifier = Modifier.size(4.dp))
-        Text(
-            text = article.description ?: stringResource(R.string.no_description),
-            style = NewsApiAppTheme.typography.bodyMedium,
-            maxLines = 3
-        )
     }
 }
 
