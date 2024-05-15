@@ -38,9 +38,9 @@ private fun RequestResult<List<Article>>.toState(): State {
     }
 }
 
-sealed class State {
-    object None : State() //default state
-    class Loading(val articles: List<Article>? = null) : State()
-    class Error(val articles: List<Article>? = null) : State()
-    class Success(val articles: List<Article>) : State()
+sealed class State(val articles: List<Article>?) {
+    object None : State(articles = null) //default state
+    class Loading(articles: List<Article>? = null) : State(articles)
+    class Error(articles: List<Article>? = null) : State(articles)
+    class Success(articles: List<Article>) : State(articles)
 }

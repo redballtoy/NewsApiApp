@@ -35,62 +35,43 @@ fun NewsMainScreen() {
 @Composable
 internal fun NewsMainScreen(vm: NewsMainViewModel) {
     val state by vm.state.collectAsState()
-    when (val currentState = state) {
-        is State.Success -> Articles(currentState.articles)
-        is State.Error -> ArticlesWithError(currentState.articles)
-        is State.Loading -> ArticlesDuringUpdate(currentState.articles)
-        State.None -> NewsEmpty()
+    val currentState = state
+    if (state != State.None) {
+        NewsStateContent(currentState)
     }
+
 }
 
 @Composable
-internal fun ArticlesWithError(articles: List<Article>?) {
+private fun NewsStateContent(currentState: State) {
     Column {
-        Box(
-            modifier = Modifier
-                .padding(8.dp)
-                .fillMaxWidth()
-                .background(MaterialTheme.colorScheme.error),
-            contentAlignment = Alignment.Center
-        ) {
-            Text(text = "Error during update.", color = MaterialTheme.colorScheme.onError)
+        if (currentState is State.Error) {
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(MaterialTheme.colorScheme.error)
+                    .padding(8.dp),
+                contentAlignment = Alignment.Center
+            ) {
+                Text(text = "Error during update.", color = MaterialTheme.colorScheme.onError)
+            }
         }
-        if (articles != null) {
-            Articles(articles = articles)
+        if (currentState is State.Loading) {
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(8.dp),
+                contentAlignment = Alignment.Center
+            ) {
+                CircularProgressIndicator()
+            }
         }
-    }
-
-}
-
-@Composable
-@Preview
-internal fun ArticlesDuringUpdate(
-    @PreviewParameter(ArticlesPreviewProvider::class, limit = 1)
-    articles: List<Article>?
-) {
-    Column {
-        Box(
-            modifier = Modifier
-                .padding(8.dp)
-                .fillMaxWidth(),
-            contentAlignment = Alignment.Center
-        ) {
-            CircularProgressIndicator()
-        }
-        if (articles != null) {
-            Articles(articles = articles)
+        if (currentState.articles != null) {
+            Articles(articles = currentState.articles)
         }
     }
-
 }
 
-@Composable
-internal fun NewsEmpty() {
-    Box(contentAlignment = Alignment.Center) {
-        Text(text = "No News")
-    }
-
-}
 
 @Preview
 @Composable
@@ -120,10 +101,22 @@ internal fun Article(
         modifier = Modifier
             .padding(8.dp)
     ) {
-        Text(text = article.publishedAt.toString()?:"No Date", style = MaterialTheme.typography.bodySmall, maxLines = 1)
-        Text(text = article.title ?:"No Title", style = MaterialTheme.typography.headlineMedium, maxLines = 1)
+        Text(
+            text = article.publishedAt.toString() ?: "No Date",
+            style = MaterialTheme.typography.bodySmall,
+            maxLines = 1
+        )
+        Text(
+            text = article.title ?: "No Title",
+            style = MaterialTheme.typography.headlineMedium,
+            maxLines = 1
+        )
         Spacer(modifier = Modifier.size(4.dp))
-        Text(text = article.description ?:"No Description", style = MaterialTheme.typography.bodyMedium, maxLines = 3)
+        Text(
+            text = article.description ?: "No Description",
+            style = MaterialTheme.typography.bodyMedium,
+            maxLines = 3
+        )
     }
 }
 
