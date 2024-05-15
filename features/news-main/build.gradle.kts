@@ -69,6 +69,9 @@ dependencies {
     implementation(libs.dagger.hilt.android)
     kapt(libs.dagger.hilt.compiler)
 
+    implementation(libs.coil)
+    implementation(libs.coil.compose)
+
     implementation(project(":news-data"))
     implementation(project(":news-uikit"))
 

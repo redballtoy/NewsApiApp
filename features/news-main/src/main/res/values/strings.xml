@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="content_article_image">Article Image</string>
+    <string name="no_description">No Description</string>
+    <string name="no_title">No Title</string>
+    <string name="no_date">No Date</string>
+    <string name="error_during_update">Error during update.</string>
+</resources>

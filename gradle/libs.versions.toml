@@ -1,6 +1,7 @@
 [versions]
 agp = "8.4.0"
 annotation = "1.7.1"
+coil = "2.6.0"
 kotlin = "1.9.23"
 kotlinx-serialization-json="1.6.3"
 coreKtx = "1.12.0"
@@ -34,6 +35,9 @@ androidx-lifecycle-viewmodel-compose = { module = "androidx.lifecycle:lifecycle-
 androidx-room-compiler = { module = "androidx.room:room-compiler", version.ref = "room" }
 androidx-room-ktx = { module = "androidx.room:room-ktx", version.ref = "room" }
 
+
+coil = { module = "io.coil-kt:coil", version.ref = "coil" }
+coil-compose = { module = "io.coil-kt:coil-compose", version.ref = "coil" }
 
 retrofit2-adapters = { module ="com.github.skydoves:retrofit-adapters-result", version.ref = "retrofit2Adapters" }
 retrofit2-kotlinx-serialization-converter = { module = "com.jakewharton.retrofit:retrofit2-kotlinx-serialization-converter", version.ref = "retrofit2KotlinxSerializationConverter" }

@@ -17,11 +17,14 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.key
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import coil.compose.AsyncImage
 import com.gmail.redballtoy.news.NewsApiAppTheme
 import com.gmail.redballtoy.news_data.model.Article
 import com.gmail.redballtoy.news_data.model.Source
@@ -67,7 +70,7 @@ private fun ErrorMessage(state: State) {
         contentAlignment = Alignment.Center
     ) {
         Text(
-            text = "Error during update.",
+            text = stringResource(R.string.error_during_update),
             color = NewsApiAppTheme.colorScheme.onError
         )
     }
@@ -96,11 +99,8 @@ private fun Articles(
         items(articles) { article ->
             key(article.id) {
                 Article(article)
-
             }
-
         }
-
     }
 }
 
@@ -115,18 +115,29 @@ internal fun Article(
             .padding(8.dp)
     ) {
         Text(
-            text = article.publishedAt.toString() ?: "No Date",
+            text = article.publishedAt.toString() ?: stringResource(R.string.no_date),
             style = NewsApiAppTheme.typography.bodySmall,
-            maxLines = 1
+            maxLines = 1,
+            modifier = Modifier.fillMaxWidth(),
+            textAlign = TextAlign.End
         )
         Text(
-            text = article.title ?: "No Title",
+            text = article.title ?: stringResource(R.string.no_title),
             style = NewsApiAppTheme.typography.headlineMedium,
-            maxLines = 1
+            maxLines = 1,
+            modifier = Modifier.fillMaxWidth(),
+            textAlign = TextAlign.Center
         )
+        article.urlToImage?.let {imageUrl->
+            AsyncImage(
+                model = imageUrl,
+                contentDescription = stringResource(R.string.content_article_image),
+                alignment = Alignment.Center
+            )
+        }
         Spacer(modifier = Modifier.size(4.dp))
         Text(
-            text = article.description ?: "No Description",
+            text = article.description ?: stringResource(R.string.no_description),
             style = NewsApiAppTheme.typography.bodyMedium,
             maxLines = 3
         )
