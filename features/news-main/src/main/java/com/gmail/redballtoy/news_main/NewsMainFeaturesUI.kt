@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -23,6 +22,7 @@ import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.gmail.redballtoy.news.NewsApiAppTheme
 import com.gmail.redballtoy.news_data.model.Article
 import com.gmail.redballtoy.news_data.model.Source
 import java.util.Date
@@ -46,29 +46,42 @@ internal fun NewsMainScreen(vm: NewsMainViewModel) {
 private fun NewsStateContent(currentState: State) {
     Column {
         if (currentState is State.Error) {
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .background(MaterialTheme.colorScheme.error)
-                    .padding(8.dp),
-                contentAlignment = Alignment.Center
-            ) {
-                Text(text = "Error during update.", color = MaterialTheme.colorScheme.onError)
-            }
+            ErrorMessage(currentState)
         }
         if (currentState is State.Loading) {
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(8.dp),
-                contentAlignment = Alignment.Center
-            ) {
-                CircularProgressIndicator()
-            }
+            ProgressIndicator(currentState)
         }
         if (currentState.articles != null) {
             Articles(articles = currentState.articles)
         }
+    }
+}
+
+@Composable
+private fun ErrorMessage(state: State) {
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .background(NewsApiAppTheme.colorScheme.error)
+            .padding(8.dp),
+        contentAlignment = Alignment.Center
+    ) {
+        Text(
+            text = "Error during update.",
+            color = NewsApiAppTheme.colorScheme.onError
+        )
+    }
+}
+
+@Composable
+private fun ProgressIndicator(state: State) {
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(8.dp),
+        contentAlignment = Alignment.Center
+    ) {
+        CircularProgressIndicator()
     }
 }
 
@@ -103,18 +116,18 @@ internal fun Article(
     ) {
         Text(
             text = article.publishedAt.toString() ?: "No Date",
-            style = MaterialTheme.typography.bodySmall,
+            style = NewsApiAppTheme.typography.bodySmall,
             maxLines = 1
         )
         Text(
             text = article.title ?: "No Title",
-            style = MaterialTheme.typography.headlineMedium,
+            style = NewsApiAppTheme.typography.headlineMedium,
             maxLines = 1
         )
         Spacer(modifier = Modifier.size(4.dp))
         Text(
             text = article.description ?: "No Description",
-            style = MaterialTheme.typography.bodyMedium,
+            style = NewsApiAppTheme.typography.bodyMedium,
             maxLines = 3
         )
     }

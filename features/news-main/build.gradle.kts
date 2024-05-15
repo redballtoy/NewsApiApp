@@ -70,5 +70,6 @@ dependencies {
     kapt(libs.dagger.hilt.compiler)
 
     implementation(project(":news-data"))
+    implementation(project(":news-uikit"))
 
 }
