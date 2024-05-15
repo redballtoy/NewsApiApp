@@ -143,18 +143,15 @@ internal fun Article(
                 modifier = Modifier.fillMaxWidth(),
                 textAlign = TextAlign.Center
             )
-            Box(
-                modifier = Modifier
-                    .clip(RoundedCornerShape(8.dp))
-
-            ) {
-                article.urlToImage?.let { imageUrl ->
-                    AsyncImage(
-                        model = imageUrl,
-                        contentDescription = stringResource(R.string.content_article_image),
-                        alignment = Alignment.Center
-                    )
-                }
+            article.urlToImage?.let { imageUrl ->
+                AsyncImage(
+                    modifier = Modifier.clip(
+                        RoundedCornerShape(8.dp)
+                    ),
+                    model = imageUrl,
+                    contentDescription = stringResource(R.string.content_article_image),
+                    alignment = Alignment.Center
+                )
             }
             Spacer(modifier = Modifier.size(4.dp))
             Text(
