@@ -8,5 +8,13 @@ plugins {
     alias(libs.plugins.ksp) apply false
     alias(libs.plugins.dagger.hilt.android) apply false
     alias(libs.plugins.kapt) apply false
+    alias(libs.plugins.detekt) apply true
 }
 
+allprojects.onEach { project ->
+    if (project.plugins.hasPlugin((libs.plugins.jetbrainsKotlinAndroid).get().pluginId)
+        || project.plugins.hasPlugin((libs.plugins.jetbrainsKotlinJvm).get().pluginId)
+        ) {
+        project.plugins.apply(libs.plugins.detekt.get().pluginId)
+    }
+}
