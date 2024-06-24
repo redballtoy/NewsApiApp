@@ -47,7 +47,6 @@ internal fun NewsMainScreen(vm: NewsMainViewModel) {
     if (state != State.None) {
         NewsStateContent(currentState)
     }
-
 }
 
 @Composable
@@ -93,7 +92,6 @@ private fun ProgressIndicator(state: State) {
     }
 }
 
-
 @Preview
 @Composable
 private fun Articles(
@@ -126,7 +124,6 @@ internal fun Article(
             modifier = Modifier
                 .padding(8.dp),
             horizontalAlignment = Alignment.CenterHorizontally
-
 
         ) {
             Text(
@@ -180,9 +177,7 @@ private class ArticlePreviewProvider : PreviewParameterProvider<Article> {
     )
 }
 
-
 private class ArticlesPreviewProvider : PreviewParameterProvider<List<Article>> {
-
     private val articleProvider = ArticlePreviewProvider()
 
     override val values = sequenceOf(

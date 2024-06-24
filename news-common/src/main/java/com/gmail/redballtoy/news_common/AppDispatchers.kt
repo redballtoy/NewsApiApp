@@ -1,5 +1,4 @@
 package com.gmail.redballtoy.news_common
-
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.MainCoroutineDispatcher

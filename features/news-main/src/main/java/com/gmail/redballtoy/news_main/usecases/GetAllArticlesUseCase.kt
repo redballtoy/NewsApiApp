@@ -12,7 +12,7 @@ class GetAllArticlesUseCase @Inject constructor(
     private val repository: ArticlesRepository
 ) {
 
-    operator fun invoke(query:String): Flow<RequestResult<List<Article>>> {
+    operator fun invoke(query: String): Flow<RequestResult<List<Article>>> {
         return repository.getAll(query)
             .map { requestResult ->
                 requestResult.map { articles ->
@@ -20,7 +20,6 @@ class GetAllArticlesUseCase @Inject constructor(
                 }
             }
     }
-
 }
 
 private fun Article.toUiArticles(): Article {

@@ -1,5 +1,4 @@
 package com.gmail.redballtoy.newsapiapp
-
 import android.content.Context
 import com.gmail.redballtoy.database.NewsDatabase
 import com.gmail.redballtoy.news_common.AndroidLogcatLogger
@@ -15,12 +14,9 @@ import dagger.hilt.components.SingletonComponent
 import okhttp3.OkHttpClient
 import javax.inject.Singleton
 
-
 @Module
 @InstallIn(SingletonComponent::class)
 object AppModule {
-
-
 
     @Provides
     @Singleton
@@ -41,7 +37,6 @@ object AppModule {
     @Provides
     @Singleton
     fun provideAppCoroutineDispatcher(): AppDispatchers = AppDispatchers()
-
 
     @Provides
     fun provideLogger(): Logger = AndroidLogcatLogger()

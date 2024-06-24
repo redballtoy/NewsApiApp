@@ -18,17 +18,13 @@ internal class NewsMainViewModel @Inject constructor(
     getAllArticlesUseCase: Provider<GetAllArticlesUseCase>,
 ) : ViewModel() {
 
-    //get new readonly state flow
+    // get new readonly state flow
     val state: StateFlow<State> = getAllArticlesUseCase.get().invoke(query = "android")
         .map { it.toState() }
         .stateIn(viewModelScope, SharingStarted.Lazily, State.None)
 
-
-    fun forceUpdate() {
-
-    }
+    // fun forceUpdate() {}
 }
-
 
 private fun RequestResult<List<Article>>.toState(): State {
     return when (this) {
@@ -39,7 +35,7 @@ private fun RequestResult<List<Article>>.toState(): State {
 }
 
 sealed class State(val articles: List<Article>?) {
-    object None : State(articles = null) //default state
+    object None : State(articles = null) // default state
     class Loading(articles: List<Article>? = null) : State(articles)
     class Error(articles: List<Article>? = null) : State(articles)
     class Success(articles: List<Article>) : State(articles)

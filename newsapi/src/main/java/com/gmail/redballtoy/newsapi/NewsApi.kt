@@ -22,9 +22,7 @@ import java.util.Date
  * [API Documentation](https://newsapi.org/docs)
  */
 
-
 interface NewsApi {
-
     /**
      * API details [here](https://newsapi.org/docs/endpoints/everything)
      */

@@ -1,11 +1,9 @@
 package com.gmail.redballtoy.news_common
-
 import android.util.Log
 
 interface Logger {
     fun d(tag: String, message: String)
     fun e(tag: String, message: String) {
-
     }
 }
 

@@ -1,5 +1,4 @@
 package com.gmail.redballtoy.database.models
-
 import androidx.room.ColumnInfo
 import androidx.room.Embedded
 import androidx.room.Entity
@@ -8,7 +7,7 @@ import java.util.Date
 
 @Entity(tableName = "articles")
 data class ArticleDBO(
-    @PrimaryKey(autoGenerate = true) val id: Long=0,
+    @PrimaryKey(autoGenerate = true) val id: Long = 0,
     @Embedded(prefix = "source-") val source: SourceDBO?,
     @ColumnInfo("author") val author: String?,
     @ColumnInfo("title") val title: String?,

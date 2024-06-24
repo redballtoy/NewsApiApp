@@ -19,7 +19,6 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.merge
 import kotlinx.coroutines.flow.onEach
 
-
 class ArticlesRepository @Inject constructor(
     private val database: NewsDatabase,
     private val api: NewsApi,
@@ -31,14 +30,11 @@ class ArticlesRepository @Inject constructor(
         query: String,
         mergeStrategy: MergeStrategy<RequestResult<List<Article>>> = DefaultMergeStrategy()
     ): Flow<RequestResult<List<Article>>> {
-
-        //local cache
+        // local cache
         val cachedAllArticles: Flow<RequestResult<List<Article>>> = getAllFromDatabase()
-
-        //remote data
+        // remote data
         val remoteArticles: Flow<RequestResult<List<Article>>> = getAllFromServer(query)
-
-        //merge result used with order
+        // merge result used with order
         return cachedAllArticles.combine(remoteArticles, mergeStrategy::merge)
             .flatMapLatest { result ->
                 if (result is RequestResult.Success) {
@@ -51,7 +47,6 @@ class ArticlesRepository @Inject constructor(
             }
     }
 
-
     private fun getAllFromDatabase(): Flow<RequestResult<List<Article>>> {
         val databaseRequest = database.articleDao::getAll
             .asFlow()
@@ -60,11 +55,9 @@ class ArticlesRepository @Inject constructor(
                 logger.e(TAG, "Error getting data from database. Cause = $it")
                 emit(RequestResult.Error<List<ArticleDBO>>(error = it))
             }
-
-        //emit inProgress
+        // emit inProgress
         val start = flowOf<RequestResult<List<ArticleDBO>>>(RequestResult.InProgress())
-
-        //union flows
+        // union flows
         return merge(start, databaseRequest).map { result ->
             result.map { articleDbos ->
                 articleDbos.map { it.toArticle() }
@@ -72,12 +65,10 @@ class ArticlesRepository @Inject constructor(
         }
     }
 
-
     suspend fun search(query: String): Flow<Article> {
         api.everything(query)
         TODO("Not Implemented")
     }
-
 
     private fun getAllFromServer(query: String): Flow<RequestResult<List<Article>>> {
         val apiRequest = flow {
@@ -90,13 +81,12 @@ class ArticlesRepository @Inject constructor(
             if (result.isFailure) {
                 logger.e(TAG, "Error getting data from server. Cause = ${result.exceptionOrNull()}")
             }
-
         }.map { it.toRequestResult() }
 
-        //emit inProgress
+        // emit inProgress
         val start = flowOf<RequestResult<ResponseDTO<ArticleDTO>>>(RequestResult.InProgress())
 
-        //union flows
+        // union flows
         return merge(apiRequest, start)
             .map { result ->
                 result.map { response ->
@@ -105,12 +95,10 @@ class ArticlesRepository @Inject constructor(
             }
     }
 
-
     private suspend fun saveArticlesToCache(data: List<ArticleDTO>) {
         val dbos = data.map { articleDTO -> articleDTO.toArticleDbo() }
         database.articleDao.insert(dbos)
     }
-
 
     fun fetchLatest(query: String): Flow<RequestResult<List<Article>>> {
         return getAllFromServer(query)
@@ -119,8 +107,4 @@ class ArticlesRepository @Inject constructor(
     private companion object {
         const val TAG = "myLog"
     }
-
-
 }
-
-

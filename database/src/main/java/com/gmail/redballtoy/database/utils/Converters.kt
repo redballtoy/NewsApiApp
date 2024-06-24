@@ -1,5 +1,4 @@
 package com.gmail.redballtoy.database.utils
-
 import androidx.room.TypeConverter
 import java.text.DateFormat
 import java.util.Date
