@@ -10,21 +10,32 @@ plugins {
     alias(libs.plugins.ksp) apply false
     alias(libs.plugins.dagger.hilt.android) apply false
     alias(libs.plugins.kapt) apply false
-    alias(libs.plugins.detekt) apply true
+    alias(libs.plugins.detekt) apply false
 }
+// 1. Применяем detekt к корневому проекту
+apply(plugin = "io.gitlab.arturbosch.detekt")
 
-allprojects.onEach { project ->
-    project.afterEvaluate {
-        with(project.plugins) {
-            if (hasPlugin(libs.plugins.jetbrainsKotlinAndroid.get().pluginId)
-                || hasPlugin(libs.plugins.jetbrainsKotlinJvm.get().pluginId)
-            ) {
-                apply(libs.plugins.detekt.get().pluginId)
-                project.extensions.configure<DetektExtension> {
-                    config.setFrom(rootProject.files("default-detekt-config.yml"))
+// 2. Настройка detekt для всех проектов
+allprojects {
+    apply(plugin = "io.gitlab.arturbosch.detekt")
+
+    afterEvaluate {
+        extensions.configure<DetektExtension> {
+            config.setFrom(rootProject.files("default-detekt-config.yml"))
+            buildUponDefaultConfig = true
+            autoCorrect = true
+
+            reports {
+                html {
+                    enabled = true
+                    destination = file("build/reports/detekt.html")
                 }
-                project.dependencies.add("detektPlugins", libs.detekt.formatting.get().toString())
             }
+        }
+
+        // Добавляем formatting правила
+        dependencies {
+            add("detektPlugins", "io.gitlab.arturbosch.detekt:detekt-formatting:1.23.0")
         }
     }
 }
