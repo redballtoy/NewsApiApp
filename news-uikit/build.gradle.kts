@@ -25,12 +25,6 @@ android {
     buildFeatures{
         compose=true
     }
-
-    composeOptions{
-        kotlinCompilerExtensionVersion = "1.5.13"
-    }
-
-
 }
 
 dependencies {
@@ -40,7 +34,6 @@ dependencies {
     api(libs.androidx.ui)
     api(libs.androidx.ui.graphics)
     api(libs.androidx.ui.tooling.preview)
-    //api(libs.androidx.compose.runtime)
     api(libs.androidx.material3)
     debugApi(libs.androidx.ui.tooling)
     debugApi(libs.androidx.ui.test.manifest)
