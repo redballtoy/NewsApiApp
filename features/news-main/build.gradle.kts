@@ -3,13 +3,14 @@ plugins {
     alias(libs.plugins.jetbrainsKotlinAndroid)
     alias(libs.plugins.dagger.hilt.android)
     alias(libs.plugins.kapt)
+    alias(libs.plugins.compose.compiler)
 }
 val lifecycleViewmodelComposeVersion by extra("2.7.0")
 
 
 android {
     namespace = "com.gmail.redballtoy.news_main"
-    compileSdk = 34
+    compileSdk = 36
 
     defaultConfig {
         minSdk = 24

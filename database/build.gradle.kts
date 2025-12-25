@@ -7,7 +7,7 @@ plugins {
 
 android {
     namespace = "com.gmail.redballtoy.database"
-    compileSdk = 34
+    compileSdk = 36
 
     defaultConfig {
         minSdk = 24

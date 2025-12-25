@@ -1,11 +1,12 @@
 plugins {
     alias(libs.plugins.androidLibrary)
     alias(libs.plugins.jetbrainsKotlinAndroid)
+    alias(libs.plugins.compose.compiler)
 }
 
 android {
     namespace = "com.gmail.redballtoy.news.uikit"
-    compileSdk = 34
+    compileSdk = 36
 
     defaultConfig {
         minSdk = 24
